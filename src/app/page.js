@@ -1,65 +1,66 @@
-import Image from "next/image";
+import Nav from '@/components/Nav';
+import Hero from '@/components/Hero';
+import AboutSection from '@/components/AboutSection';
+import EducationSection from '@/components/EducationSection';
+import ExperienceSection from '@/components/ExperienceSection';
+import ProjectsSection from '@/components/ProjectsSection';
+import AwardsSection from '@/components/AwardsSection';
+import ContactSection from '@/components/ContactSection';
+import Footer from '@/components/Footer';
+import RevealObserver from '@/components/RevealObserver';
 
-export default function Home() {
+import { CONTACT } from '@/data/contact';
+import { getAbout } from '@/lib/queries';
+
+const ROLE = 'Full-stack developer';
+
+function urlHandle(url, platform) {
+  if (!url) return '';
+  try {
+    const parts = new URL(url).pathname.split('/').filter(Boolean);
+    const slug = parts[parts.length - 1] || '';
+    return platform === 'linkedin' ? `in/${slug}` : `@${slug}`;
+  } catch {
+    return url;
+  }
+}
+
+function buildContactData(about) {
+  const links = [];
+  if (about?.github_url)   links.push({ label: 'GitHub',   handle: urlHandle(about.github_url, 'github'),     icon: 'Github',   href: about.github_url,   el: 'air' });
+  if (about?.linkedin_url) links.push({ label: 'LinkedIn', handle: urlHandle(about.linkedin_url, 'linkedin'), icon: 'Linkedin', href: about.linkedin_url, el: 'water' });
+  if (about?.x_url)        links.push({ label: 'X',        handle: urlHandle(about.x_url, 'x'),              icon: 'X',        href: about.x_url,        el: 'fire' });
+  if (about?.email)        links.push({ label: 'Email',    handle: about.email,                               icon: 'Mail',     href: `mailto:${about.email}`, el: 'earth' });
+  return {
+    blurb: about?.contact_blurb || CONTACT.blurb,
+    email: about?.email || CONTACT.email,
+    links: links.length ? links : CONTACT.links,
+  };
+}
+
+export default async function Home() {
+  const about = await getAbout();
+  const NAME = about?.name || 'Your Name';
+  const TAGLINE = about?.tagline || '';
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <>
+      <Nav name={NAME} logo={about?.favicon_url} />
+      <main>
+        <div className="wrap">
+          <Hero name={NAME} role={ROLE} tagline={TAGLINE} avatar={about?.avatar_url || '/portfolio-main-2.png'} />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <AboutSection />
+        <EducationSection />
+        <ExperienceSection />
+        <ProjectsSection />
+        <AwardsSection />
+        <ContactSection data={buildContactData(about)} />
+        <div className="wrap">
+          <Footer name={NAME} />
         </div>
       </main>
-    </div>
+      <RevealObserver />
+    </>
   );
 }
