@@ -14,10 +14,15 @@ import { getAbout } from '@/lib/queries';
 
 const ROLE = 'Full-stack developer';
 
+function normalize(url) {
+  if (!url) return '';
+  return /^https?:\/\//i.test(url) ? url : `https://${url}`;
+}
+
 function urlHandle(url, platform) {
   if (!url) return '';
   try {
-    const parts = new URL(url).pathname.split('/').filter(Boolean);
+    const parts = new URL(normalize(url)).pathname.split('/').filter(Boolean);
     const slug = parts[parts.length - 1] || '';
     return platform === 'linkedin' ? `in/${slug}` : `@${slug}`;
   } catch {
@@ -26,11 +31,14 @@ function urlHandle(url, platform) {
 }
 
 function buildContactData(about) {
+  const gh = normalize(about?.github_url);
+  const li = normalize(about?.linkedin_url);
+  const x  = normalize(about?.x_url);
   const links = [];
-  if (about?.github_url)   links.push({ label: 'GitHub',   handle: urlHandle(about.github_url, 'github'),     icon: 'Github',   href: about.github_url,   el: 'air' });
-  if (about?.linkedin_url) links.push({ label: 'LinkedIn', handle: urlHandle(about.linkedin_url, 'linkedin'), icon: 'Linkedin', href: about.linkedin_url, el: 'water' });
-  if (about?.x_url)        links.push({ label: 'X',        handle: urlHandle(about.x_url, 'x'),              icon: 'X',        href: about.x_url,        el: 'fire' });
-  if (about?.email)        links.push({ label: 'Email',    handle: about.email,                               icon: 'Mail',     href: `mailto:${about.email}`, el: 'earth' });
+  if (gh) links.push({ label: 'GitHub',   handle: urlHandle(gh, 'github'),   icon: 'Github',   href: gh, el: 'air' });
+  if (li) links.push({ label: 'LinkedIn', handle: urlHandle(li, 'linkedin'), icon: 'Linkedin', href: li, el: 'water' });
+  if (x)  links.push({ label: 'X',        handle: urlHandle(x,  'x'),        icon: 'X',        href: x,  el: 'fire' });
+  if (about?.email) links.push({ label: 'Email', handle: about.email, icon: 'Mail', href: `mailto:${about.email}`, el: 'earth' });
   return {
     blurb: about?.contact_blurb || CONTACT.blurb,
     email: about?.email || CONTACT.email,
