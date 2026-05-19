@@ -9,6 +9,8 @@ import ContactSection from '@/components/ContactSection';
 import Footer from '@/components/Footer';
 import RevealObserver from '@/components/RevealObserver';
 
+export const dynamic = 'force-dynamic';
+
 import { CONTACT } from '@/data/contact';
 import { getAbout } from '@/lib/queries';
 
