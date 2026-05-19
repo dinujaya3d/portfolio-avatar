@@ -5,7 +5,6 @@ import { Arrow } from './icons/Social';
 
 export default function Hero({
   name = 'Your Name',
-  role = 'Full-stack developer',
   tagline = 'Crafting balance between code and craft.',
   avatar = '',
 }) {
@@ -46,19 +45,10 @@ export default function Hero({
 
       <div className="orb-stage" aria-hidden="true">
         {avatar && (
-          <img
-            src={avatar}
-            alt=""
-            style={{
-              position: 'absolute',
-              inset: 0,
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              objectPosition: 'center top',
-              borderRadius: '50%',
-            }}
-          />
+          <div className="avatar-stack">
+            <div className="avatar-bg" />
+            <img className="avatar-img" src={avatar} alt="" />
+          </div>
         )}
       </div>
     </header>

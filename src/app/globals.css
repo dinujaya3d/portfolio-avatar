@@ -1449,19 +1449,32 @@ html[data-theme="dark"] .contact-link .ico{
   pointer-events: none;
 }
 
-/* Hero ambient sky wash behind orb */
-.orb-stage::before{
-  content:"";
-  position: absolute;
-  width: 460px; height: 460px;
+/* Avatar stack: CSS grid layers background circle + photo in one cell */
+.avatar-stack{
+  display: grid;
+  place-items: center;
+}
+.avatar-bg, .avatar-img{
+  grid-area: 1 / 1;
+}
+.avatar-bg{
+  width: 440px; height: 440px;
   border-radius: 50%;
   background: var(--sky-soft);
-  z-index: -1;
-  opacity: .7;
-  transform: translate3d(calc(var(--px) * -10px), calc(var(--py) * -8px), 0);
-  transition: transform .35s ease-out;
+  z-index: 0;
 }
-html[data-theme="dark"] .orb-stage::before{ opacity: .35; }
+.avatar-img{
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  z-index: 1;
+}
+@media (max-width: 920px){
+  .avatar-bg{ width: 300px; height: 300px; }
+  .avatar-img{ width: 270px; height: 270px; }
+}
 
 /* Spline canvas — transparent background */
 .orb-stage canvas { background: transparent !important; }
