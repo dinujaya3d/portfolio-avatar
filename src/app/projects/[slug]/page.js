@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation';
 import { getProjects, getProjectBySlug } from '@/lib/queries';
 import ProjectContent from '@/components/ProjectContent';
 
+export const dynamic = 'force-dynamic';
+
 export async function generateStaticParams() {
   const projects = await getProjects();
   return projects.map((p) => ({ slug: p.slug }));
@@ -43,6 +45,7 @@ export default async function ProjectPage({ params }) {
             alt={project.title}
             fill
             priority
+            unoptimized
             style={{ objectFit: 'cover' }}
           />
         )}

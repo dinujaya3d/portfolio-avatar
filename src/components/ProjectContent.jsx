@@ -30,6 +30,7 @@ const components = {
           alt={alt || ''}
           width={1200}
           height={675}
+          unoptimized
           style={{ width: '100%', height: 'auto', borderRadius: 14, display: 'block' }}
         />
         {alt && <span style={s.caption}>{alt}</span>}

@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation';
 import { getAwards, getAwardBySlug } from '@/lib/queries';
 import ProjectContent from '@/components/ProjectContent';
 
+export const dynamic = 'force-dynamic';
+
 export async function generateStaticParams() {
   const awards = await getAwards();
   return awards.map((a) => ({ slug: a.slug }));
@@ -41,7 +43,7 @@ export default async function AwardPage({ params }) {
         background: 'color-mix(in oklch, oklch(72% 0.12 75) 22%, var(--paper-2))',
       }}>
         {award.cover_image && (
-          <Image src={award.cover_image} alt={award.title} fill priority style={{ objectFit: 'cover' }} />
+          <Image src={award.cover_image} alt={award.title} fill priority unoptimized style={{ objectFit: 'cover' }} />
         )}
         <div style={{
           position: 'absolute', inset: 0,
